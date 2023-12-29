@@ -31,7 +31,7 @@ class Movie extends Model
     protected function poster(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => url('uploads/'.$value),
+            get: fn ($value) => url('/'.$value),
         );
     }
 }

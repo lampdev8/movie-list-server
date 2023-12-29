@@ -34,7 +34,7 @@ Route::group(['prefix' => LocalizationFacade::locale(), 'middleware' => ['set_lo
 
     Route::get('images/posters/{image_name}', function($image_name = null)
     {
-        $path = 'images/posters/1703765710.png';
+        $path = 'images/posters/' . $image_name;
         if (Storage::disk('local')->exists($path)) {
             $response = Response::make(Storage::get($path), 200);
             $type = Storage::mimeType($path);
