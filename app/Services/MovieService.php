@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 class MovieService extends BaseService
 {
     private const POSTERS_DIRECTORY = 'images/posters/';
-    private const API_VERSION = '/api/v1/';
+    private const API_VERSION = 'api/v1/';
 
     /**
     * Constructor.
@@ -49,8 +49,6 @@ class MovieService extends BaseService
 
         Storage::disk('local')->put($posterUrl, base64_decode($poster));
 
-        $host = request()->getHttpHost();
-
-        return $host . self::API_VERSION . $posterUrl;
+        return self::API_VERSION . $posterUrl;
     }
 }

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 class MovieRepository extends BaseRepository
 {
-    const ITEMS_ON_PAGE = 10;
+    const ITEMS_ON_PAGE = 8;
 
     /**
     * Constructor.
