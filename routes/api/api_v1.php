@@ -3,8 +3,7 @@
 use App\Facades\LocalizationFacade;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\MovieController;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Response;
+use App\Facades\PosterFacade;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,19 +27,17 @@ Route::group(['prefix' => LocalizationFacade::locale(), 'middleware' => ['set_lo
     Route::prefix('movies')->group(function () {
         Route::resource('/', MovieController::class)->except([
             'index',
+            'show',
+            'update',
         ]);
         Route::get('/', [MovieController::class, 'index'])->name('movies');
+        Route::get('/{id}', [MovieController::class, 'show'])->name('movie_show');
+        Route::put('/{id}', [MovieController::class, 'update'])->name('movie_update');
     });
 
-    Route::get('images/posters/{image_name}', function($image_name = null)
+    Route::get('images/posters/{poster_name}', function($poster_name = null)
     {
-        $path = 'images/posters/' . $image_name;
-        if (Storage::disk('local')->exists($path)) {
-            $response = Response::make(Storage::get($path), 200);
-            $type = Storage::mimeType($path);
-            $response->header("Content-Type", $type);
-
-            return $response;
-        }
+        $path = 'images/posters/' . $poster_name;
+        return PosterFacade::getPoster($path);
     });
 });
