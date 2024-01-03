@@ -24,7 +24,7 @@ class SetLocale
 
             if($segmentsArr) {
                 foreach($segmentsArr as $preffix) {
-                    if(in_array($preffix, config('app.locales'))) {
+                    if(in_array($preffix, config('app.available_locales'))) {
                         App::setLocale($preffix);
                         break;
                     }

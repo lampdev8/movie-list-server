@@ -151,6 +151,22 @@ class MovieController extends AbstractApiController
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            MovieFacade::destroy($id);
+
+            return $this->responseJSON(
+                __('movies.response.200.destroy'),
+                200,
+                [],
+            );
+        } catch (\Exception $e) {
+            Log::error($e);
+
+            return $this->responseJSON(
+                __('movies.response.500'),
+                500,
+                [],
+            );
+        }
     }
 }

@@ -16,7 +16,7 @@ use App\Facades\PosterFacade;
 |
 */
 
-Route::group(['prefix' => LocalizationFacade::locale(), 'middleware' => ['set_locale']], function($router) {
+Route::group(['prefix' => LocalizationFacade::locale(), 'middleware' => ['set_locale', 'cors']], function($router) {
     Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
         Route::post('logout', 'AuthController@logout')->middleware('jwt')->name('auth_logout_v1');
         Route::get('me', 'AuthController@me')->middleware('jwt')->name('auth_me_v1');
@@ -29,10 +29,12 @@ Route::group(['prefix' => LocalizationFacade::locale(), 'middleware' => ['set_lo
             'index',
             'show',
             'update',
+            'destroy',
         ]);
         Route::get('/', [MovieController::class, 'index'])->name('movies');
         Route::get('/{id}', [MovieController::class, 'show'])->name('movie_show');
         Route::put('/{id}', [MovieController::class, 'update'])->name('movie_update');
+        Route::delete('/{id}', [MovieController::class, 'destroy'])->name('movie_delete');
     });
 
     Route::get('images/posters/{poster_name}', function($poster_name = null)
