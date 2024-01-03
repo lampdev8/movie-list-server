@@ -10,6 +10,8 @@ class Movie extends Model
 {
     use HasFactory;
 
+    private const API_VERSION = 'api/v1/';
+
      /**
      * The attributes that are mass assignable.
      *
@@ -31,7 +33,7 @@ class Movie extends Model
     protected function poster(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => url('/'.$value),
+            get: fn ($value) => url(self::API_VERSION . $value),
         );
     }
 }

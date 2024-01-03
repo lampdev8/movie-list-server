@@ -3,8 +3,7 @@
 use App\Facades\LocalizationFacade;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\MovieController;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Response;
+use App\Facades\PosterFacade;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +16,7 @@ use Illuminate\Support\Facades\Response;
 |
 */
 
-Route::group(['prefix' => LocalizationFacade::locale(), 'middleware' => ['set_locale']], function($router) {
+Route::group(['prefix' => LocalizationFacade::locale(), 'middleware' => ['set_locale', 'cors']], function($router) {
     Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function ($router) {
         Route::post('logout', 'AuthController@logout')->middleware('jwt')->name('auth_logout_v1');
         Route::get('me', 'AuthController@me')->middleware('jwt')->name('auth_me_v1');
@@ -28,19 +27,19 @@ Route::group(['prefix' => LocalizationFacade::locale(), 'middleware' => ['set_lo
     Route::prefix('movies')->group(function () {
         Route::resource('/', MovieController::class)->except([
             'index',
+            'show',
+            'update',
+            'destroy',
         ]);
         Route::get('/', [MovieController::class, 'index'])->name('movies');
+        Route::get('/{id}', [MovieController::class, 'show'])->name('movie_show');
+        Route::put('/{id}', [MovieController::class, 'update'])->name('movie_update');
+        Route::delete('/{id}', [MovieController::class, 'destroy'])->name('movie_delete');
     });
 
-    Route::get('images/posters/{image_name}', function($image_name = null)
+    Route::get('images/posters/{poster_name}', function($poster_name = null)
     {
-        $path = 'images/posters/' . $image_name;
-        if (Storage::disk('local')->exists($path)) {
-            $response = Response::make(Storage::get($path), 200);
-            $type = Storage::mimeType($path);
-            $response->header("Content-Type", $type);
-
-            return $response;
-        }
+        $path = 'images/posters/' . $poster_name;
+        return PosterFacade::getPoster($path);
     });
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Api\V1\AbstractApiController;
 use Illuminate\Http\Request;
 use App\Facades\MovieFacade;
+use App\Facades\PosterFacade;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 
@@ -21,7 +22,7 @@ class MovieController extends AbstractApiController
         $responseData = MovieFacade::getMovies($request);
 
         return $this->responseJSON(
-            __('posts.response.200.all'),
+            __('movies.response.200.all'),
             200,
             $responseData,
         );
@@ -49,7 +50,7 @@ class MovieController extends AbstractApiController
 
             $nowDate = new \DateTime('now');
 
-            $posterUrl = MovieFacade::uploadPosterImage($request->poster);
+            $posterUrl = PosterFacade::uploadPoster($request->poster);
 
             MovieFacade::create([
                 'title' => $request->title,
@@ -60,7 +61,7 @@ class MovieController extends AbstractApiController
             ]);
 
             return $this->responseJSON(
-                __('posts.response.200.store'),
+                __('movies.response.200.store'),
                 200,
                 [],
             );
@@ -68,7 +69,7 @@ class MovieController extends AbstractApiController
             Log::error($e);
 
             return $this->responseJSON(
-                __('posts.response.500'),
+                __('movies.response.500'),
                 500,
                 [],
             );
@@ -80,7 +81,23 @@ class MovieController extends AbstractApiController
      */
     public function show(string $id)
     {
-        //
+        try {
+            $movie = MovieFacade::find($id);
+
+            return $this->responseJSON(
+                __('movies.response.200.show'),
+                200,
+                $movie ?? [],
+            );
+        } catch (\Exception $e) {
+            Log::error($e);
+
+            return $this->responseJSON(
+                __('movies.response.500'),
+                500,
+                [],
+            );
+        }
     }
 
     /**
@@ -96,7 +113,37 @@ class MovieController extends AbstractApiController
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $nowDate = new \DateTime('now');
+
+            $dataToUpdate = [
+                'title' => $request->title,
+                'year' => $request->year,
+                'updated_at' => $nowDate,
+            ];
+
+            $poster = PosterFacade::checkChanges($id, $request->poster);
+
+            if ($poster) {
+                $dataToUpdate['poster'] = $poster;
+            }
+
+            MovieFacade::update($id, $dataToUpdate);
+
+            return $this->responseJSON(
+                __('movies.response.200.update'),
+                200,
+                [],
+            );
+        } catch (\Exception $e) {
+            Log::error($e);
+
+            return $this->responseJSON(
+                __('movies.response.500'),
+                500,
+                [],
+            );
+        }
     }
 
     /**
@@ -104,6 +151,22 @@ class MovieController extends AbstractApiController
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            MovieFacade::destroy($id);
+
+            return $this->responseJSON(
+                __('movies.response.200.destroy'),
+                200,
+                [],
+            );
+        } catch (\Exception $e) {
+            Log::error($e);
+
+            return $this->responseJSON(
+                __('movies.response.500'),
+                500,
+                [],
+            );
+        }
     }
 }
