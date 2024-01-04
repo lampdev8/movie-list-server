@@ -32,7 +32,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->routes(function () {
             Route::group([
-                'middleware' => ['api', 'api_version_set:v1', 'set_locale'],
+                'middleware' => ['api', 'cors', 'api_version_set:v1'],
                 'namespace' => "{$this->apiNamespace}\V1",
                 'prefix' => 'api/v1',
             ], function ($router) {

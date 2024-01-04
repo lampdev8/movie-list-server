@@ -22,6 +22,27 @@ class MovieRepository extends BaseRepository
     }
 
     /**
+     * Inits requests for getting movies, appropriate to the filters
+     *
+     * @param object $request
+     * @return object
+     */
+    private function initRequest(object $request)
+    {
+        $query = $this->model;
+
+        if ($request->exists('search') && strlen($request->search) > 0) {
+            $query = $query->where('title', 'like', "%{$request->search}%");
+        }
+
+        if ($request->exists('year') && strlen($request->year) > 0) {
+            $query = $query->where('year', 'like', "%{$request->year}%");
+        }
+
+        return $query;
+    }
+
+    /**
      * Gets movies, appropriate to the pagination
      *
      * @param object $request
@@ -29,6 +50,6 @@ class MovieRepository extends BaseRepository
      */
     public function getMovies(object $request): object
     {
-        return $this->model->paginate(self::ITEMS_ON_PAGE);
+        return $this->initRequest($request)->paginate(self::ITEMS_ON_PAGE);
     }
 }

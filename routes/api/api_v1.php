@@ -24,18 +24,13 @@ Route::group(['prefix' => LocalizationFacade::locale(), 'middleware' => ['set_lo
         Route::post('refresh', 'AuthController@refresh')->name('auth_refresh_token_v1');
     });
 
-    Route::prefix('movies')->group(function () {
-        Route::resource('/', MovieController::class)->except([
-            'index',
-            'show',
-            'update',
-            'destroy',
-        ]);
-        Route::get('/', [MovieController::class, 'index'])->name('movies');
+    Route::prefix('movie')->group(function () {
+        Route::post('/store', [MovieController::class, 'store'])->name('movie_store');
         Route::get('/{id}', [MovieController::class, 'show'])->name('movie_show');
         Route::put('/{id}', [MovieController::class, 'update'])->name('movie_update');
         Route::delete('/{id}', [MovieController::class, 'destroy'])->name('movie_delete');
     });
+    Route::get('/movies/{search?}/{genre?}/{year?}/{page?}', [MovieController::class, 'index'])->name('movies');
 
     Route::get('images/posters/{poster_name}', function($poster_name = null)
     {
