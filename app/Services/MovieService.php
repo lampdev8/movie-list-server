@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Services\BaseService;
 use App\Repositories\MovieRepository;
-use Illuminate\Support\Facades\Storage;
 
 class MovieService extends BaseService
 {

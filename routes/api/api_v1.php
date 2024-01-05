@@ -4,6 +4,7 @@ use App\Facades\LocalizationFacade;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\MovieController;
 use App\Facades\PosterFacade;
+use App\Http\Controllers\Api\V1\GenreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,4 +38,6 @@ Route::group(['prefix' => LocalizationFacade::locale(), 'middleware' => ['set_lo
         $path = 'images/posters/' . $poster_name;
         return PosterFacade::getPoster($path);
     });
+
+    Route::get('/genres', [GenreController::class, 'index'])->name('genres');
 });

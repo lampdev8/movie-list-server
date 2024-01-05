@@ -23,18 +23,9 @@ class Movie extends Model
         'title',
         'year',
         'poster',
-        'genre_id',
         'created_at',
         'updated_at',
-    ];
-
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $attributes = [
-        'genre_name',
+        'genre_id',
     ];
 
     protected $appends = [

@@ -4,8 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Movie;
 use App\Repositories\BaseRepository;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 
 class MovieRepository extends BaseRepository
 {
@@ -33,6 +31,10 @@ class MovieRepository extends BaseRepository
 
         if ($request->exists('search') && strlen($request->search) > 0) {
             $query = $query->where('title', 'like', "%{$request->search}%");
+        }
+
+        if ($request->exists('genre') && strlen($request->genre) > 0) {
+            $query = $query->where('genre_id', 'like', "{$request->genre}");
         }
 
         if ($request->exists('year') && strlen($request->year) > 0) {

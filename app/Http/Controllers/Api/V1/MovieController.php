@@ -44,6 +44,7 @@ class MovieController extends AbstractApiController
         try {
             Validator::make($request->all(), [
                 'title' => ['required'],
+                'genre' => ['required'],
                 'year' => ['required'],
                 'poster' => ['required'],
             ])->validate();
@@ -58,6 +59,7 @@ class MovieController extends AbstractApiController
                 'poster' => $posterUrl,
                 'created_at' => $nowDate,
                 'updated_at' => $nowDate,
+                'genre_id' => $request->genre,
             ]);
 
             return $this->responseJSON(
@@ -114,10 +116,18 @@ class MovieController extends AbstractApiController
     public function update(Request $request, string $id)
     {
         try {
+            Validator::make($request->all(), [
+                'title' => ['required'],
+                'genre' => ['required'],
+                'year' => ['required'],
+                'poster' => ['required'],
+            ])->validate();
+
             $nowDate = new \DateTime('now');
 
             $dataToUpdate = [
                 'title' => $request->title,
+                'genre_id' => $request->genre,
                 'year' => $request->year,
                 'updated_at' => $nowDate,
             ];
